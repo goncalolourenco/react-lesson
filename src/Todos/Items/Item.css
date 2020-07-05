@@ -1,0 +1,23 @@
+.todo-item {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  border-bottom: 1px solid #53bdff;
+}
+
+.done {
+  text-decoration-line: line-through;
+  color: #ff0000;
+}
+
+.delete {
+  font-size: 0.8em;
+  background-color: #ff0000;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
