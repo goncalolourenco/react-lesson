@@ -64,14 +64,32 @@ class TodosList extends React.Component {
   };
 
   async componentDidMount() {
-    try {
-      this.setState({ fetchState: { isLoading: true, error: null } });
-      const todos = await client.getUserTodos({ userId: 1 });
-      this.setState({ todos, fetchState: { isLoading: false } });
-    } catch (error) {
-      this.setState({
-        fetchState: { isLoading: false, error: 'The request has failed' },
-      });
+    const { user } = this.props;
+
+    if (user) {
+      try {
+        this.setState({ fetchState: { isLoading: true, error: null } });
+        const todos = await client.getUserTodos({ userId: user.id });
+        this.setState({ todos, fetchState: { isLoading: false } });
+      } catch (error) {
+        this.setState({
+          fetchState: { isLoading: false, error: 'The request has failed' },
+        });
+      }
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.user && prevProps.user !== this.props.user) {
+      try {
+        this.setState({ fetchState: { isLoading: true, error: null } });
+        const todos = await client.getUserTodos({ userId: this.props.user.id });
+        this.setState({ todos, fetchState: { isLoading: false } });
+      } catch (error) {
+        this.setState({
+          fetchState: { isLoading: false, error: 'The request has failed' },
+        });
+      }
     }
   }
 
@@ -82,14 +100,16 @@ class TodosList extends React.Component {
       fetchState: { isLoading, error },
     } = this.state;
 
+    const { user } = this.props;
+
     return (
       <div className='todos-container'>
-        <h3>Todos list</h3>
+        <h3>{user ? `${user.name} To-do list` : 'No user selected'}</h3>
 
         {isLoading && <div>Loading...</div>}
         {error && <div>{error}</div>}
 
-        {!isLoading && !error && (
+        {user && !isLoading && !error && (
           <>
             <form className='todos-form'>
               <input
