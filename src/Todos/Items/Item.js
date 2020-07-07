@@ -6,14 +6,21 @@ class TodoItem extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { id } = this.props;
+    const { id, onRemove } = this.props;
+    onRemove && onRemove(id);
+  };
+
+  handleItemClick = () => {
+    const { id, done, onClick } = this.props;
+
+    onClick && onClick(id, !done);
   };
 
   render() {
     const { text, done } = this.props;
 
     return (
-      <li className='todo-item'>
+      <li className='todo-item' onClick={this.handleItemClick}>
         <span className={done ? 'done' : ''}>{text}</span>
         <button className='delete' onClick={this.handleRemoveClick}>
           X
