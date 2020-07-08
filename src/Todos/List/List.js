@@ -2,7 +2,6 @@ import React from 'react';
 import './List.css';
 import TodoItem from '../Items/Item';
 import { nextId } from '../../utils';
-import client from '../../client';
 
 class TodosList extends React.Component {
   constructor() {
@@ -10,10 +9,6 @@ class TodosList extends React.Component {
     this.state = {
       newTodo: '',
       todos: [],
-      fetchState: {
-        isLoading: false,
-        error: null,
-      },
     };
   }
 
@@ -63,44 +58,16 @@ class TodosList extends React.Component {
     });
   };
 
-  async componentDidMount() {
-    const { user } = this.props;
-
-    if (user) {
-      try {
-        this.setState({ fetchState: { isLoading: true, error: null } });
-        const todos = await client.getUserTodos({ userId: user.id });
-        this.setState({ todos, fetchState: { isLoading: false } });
-      } catch (error) {
-        this.setState({
-          fetchState: { isLoading: false, error: 'The request has failed' },
-        });
-      }
-    }
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (this.props.user && prevProps.user !== this.props.user) {
-      try {
-        this.setState({ fetchState: { isLoading: true, error: null } });
-        const todos = await client.getUserTodos({ userId: this.props.user.id });
-        this.setState({ todos, fetchState: { isLoading: false } });
-      } catch (error) {
-        this.setState({
-          fetchState: { isLoading: false, error: 'The request has failed' },
-        });
-      }
+  componentDidUpdate(prevProps) {
+    if (this.props.todosData !== prevProps.todosData) {
+      this.setState({ todos: this.props.todosData });
     }
   }
 
   render() {
-    const {
-      newTodo,
-      todos,
-      fetchState: { isLoading, error },
-    } = this.state;
+    const { newTodo, todos } = this.state;
 
-    const { user } = this.props;
+    const { user, isLoading, error } = this.props;
 
     return (
       <div className='todos-container'>
