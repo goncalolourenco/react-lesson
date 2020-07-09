@@ -1,7 +1,7 @@
 import React from 'react';
 import './Item.css';
 
-class TodoItem extends React.Component {
+class TodoItem extends React.PureComponent {
   handleRemoveClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
