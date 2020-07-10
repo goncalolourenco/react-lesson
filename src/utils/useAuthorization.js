@@ -21,7 +21,13 @@ export const useAuthorization = () => {
     setAuthorization(defaultState);
   };
 
-  return { auth: authorization, login, logout };
+  const hasWritePermissions = () => {
+    return (
+      authorization.permissions && authorization.permissions.includes('WRITE')
+    );
+  };
+
+  return { auth: authorization, login, logout, hasWritePermissions };
 };
 
 export const AuthContext = React.createContext();

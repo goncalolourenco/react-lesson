@@ -1,7 +1,10 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
+import { AuthContext } from '../utils';
 import '../Todos/Items/Item.css';
 
 function TodosItem({ id, text, done, onClick, onRemove }) {
+  const { hasWritePermissions } = useContext(AuthContext);
+
   const handleRemoveClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -16,9 +19,11 @@ function TodosItem({ id, text, done, onClick, onRemove }) {
   return (
     <li className='todo-item' onClick={handleItemClick}>
       <span className={done ? 'done' : ''}>{text}</span>
-      <button className='delete' onClick={handleRemoveClick}>
-        X
-      </button>
+      {hasWritePermissions() && (
+        <button className='delete' onClick={handleRemoveClick}>
+          X
+        </button>
+      )}
     </li>
   );
 }

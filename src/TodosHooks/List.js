@@ -1,12 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import '../Todos/List/List.css';
 import TodoItem from './Item';
-import { nextId, useQuery } from '../utils';
+import { nextId, useQuery, AuthContext } from '../utils';
 import client from '../client';
 
 function TodosList({ user }) {
   const [todos, setTodos] = React.useState([]);
   const [newTodo, setNewTodo] = React.useState('');
+  const { hasWritePermissions } = useContext(AuthContext);
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -67,18 +68,20 @@ function TodosList({ user }) {
 
       {user && !isLoading && !error && (
         <>
-          <form className='todos-form'>
-            <input
-              className='flex-fullwidth'
-              type='text'
-              placeholder='new task'
-              value={newTodo}
-              onChange={handleInputChange}
-            />
-            <button type='submit' onClick={handleAddTodo} disabled={!newTodo}>
-              add
-            </button>
-          </form>
+          {hasWritePermissions() && (
+            <form className='todos-form'>
+              <input
+                className='flex-fullwidth'
+                type='text'
+                placeholder='new task'
+                value={newTodo}
+                onChange={handleInputChange}
+              />
+              <button type='submit' onClick={handleAddTodo} disabled={!newTodo}>
+                add
+              </button>
+            </form>
+          )}
           <div className='todos-list-container'>
             <ul className='todos-list'>
               {todos.map((todo) => {
