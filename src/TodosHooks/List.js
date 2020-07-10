@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import '../Todos/List/List.css';
 import TodoItem from './Item';
 import { nextId, useQuery } from '../utils';
@@ -21,16 +21,16 @@ function TodosList({ user }) {
     setNewTodo('');
   };
 
-  const handleRemoveTodo = (id) => {
-    setTodos(
+  const handleRemoveTodo = useCallback((id) => {
+    setTodos((todos) =>
       todos.filter((todo) => {
         return todo.id !== id;
       })
     );
-  };
+  }, []);
 
-  const handleItemClick = (id, done) => {
-    setTodos(
+  const handleItemClick = useCallback((id, done) => {
+    setTodos((todos) =>
       todos.map((todo) => {
         if (todo.id === id) {
           return { ...todo, done };
@@ -39,7 +39,7 @@ function TodosList({ user }) {
         return todo;
       })
     );
-  };
+  }, []);
 
   const handleClear = () => {
     setTodos([]);

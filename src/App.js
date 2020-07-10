@@ -2,34 +2,30 @@ import React from 'react';
 import './App.css';
 import TodosList from './TodosHooks/List';
 import UsersList from './TodosHooks/Users';
-import { ApiQuery, withApiQuery } from './utils';
-import client from './client';
-import { fromPairs } from 'lodash';
+import { useAuthorization, AuthContext } from './utils';
+import Header from './Header';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      selectedUser: null,
-    };
-  }
+function App() {
+  const [selectedUser, setSelectedUser] = React.useState(null);
+  const authInfo = useAuthorization();
 
-  handleClickUser = (_, user) => {
-    this.setState({
-      selectedUser: user,
-    });
+  const handleClickUser = (_, user) => {
+    setSelectedUser(user);
   };
 
-  render() {
-    const { selectedUser } = this.state;
-
-    return (
+  return (
+    <AuthContext.Provider value={authInfo}>
       <div className='App'>
-        <UsersList onClick={this.handleClickUser} />
-        <TodosList user={selectedUser} />
+        <Header />
+        {authInfo.auth.isLoggedIn && (
+          <>
+            <UsersList onClick={handleClickUser} />
+            <TodosList user={selectedUser} />
+          </>
+        )}
       </div>
-    );
-  }
+    </AuthContext.Provider>
+  );
 }
 
 export default App;

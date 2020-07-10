@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import '../Todos/Items/Item.css';
 
 function TodosItem({ id, text, done, onClick, onRemove }) {
@@ -23,4 +23,4 @@ function TodosItem({ id, text, done, onClick, onRemove }) {
   );
 }
 
-export default TodosItem;
+export default memo(TodosItem);
