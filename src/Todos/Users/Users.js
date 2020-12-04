@@ -1,8 +1,10 @@
 import React from 'react';
+import { useQuery } from '../../utils';
 import './Users.css';
+import client from '../../client';
 
-function UsersList(props) {
-  const { users, isLoading, onClick } = props;
+function UsersList({ onClick }) {
+  const { data: users, isLoading } = useQuery(client.getUsers);
 
   return isLoading ? (
     <div>Loading...</div>

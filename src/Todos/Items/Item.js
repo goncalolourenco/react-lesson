@@ -1,33 +1,31 @@
-import React from 'react';
+import React, { memo, useContext } from 'react';
+import { AuthContext } from '../../utils';
 import './Item.css';
 
-class TodoItem extends React.PureComponent {
-  handleRemoveClick = (event) => {
+function TodosItem({ id, text, done, onClick, onRemove }) {
+  const { hasWritePermissions } = useContext(AuthContext);
+
+  const handleRemoveClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const { id, onRemove } = this.props;
     onRemove && onRemove(id);
   };
 
-  handleItemClick = () => {
-    const { id, done, onClick } = this.props;
-
+  const handleItemClick = () => {
     onClick && onClick(id, !done);
   };
 
-  render() {
-    const { text, done } = this.props;
-
-    return (
-      <li className='todo-item' onClick={this.handleItemClick}>
-        <span className={done ? 'done' : ''}>{text}</span>
-        <button className='delete' onClick={this.handleRemoveClick}>
+  return (
+    <li className='todo-item' onClick={handleItemClick}>
+      <span className={done ? 'done' : ''}>{text}</span>
+      {hasWritePermissions() && (
+        <button className='delete' onClick={handleRemoveClick}>
           X
         </button>
-      </li>
-    );
-  }
+      )}
+    </li>
+  );
 }
 
-export default TodoItem;
+export default memo(TodosItem);

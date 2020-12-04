@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import TodosList from './TodosHooks/List';
-import UsersList from './TodosHooks/Users';
+import TodosList from './Todos/List/List';
+import UsersList from './Todos/Users/Users';
 import { useAuthorization, AuthContext } from './utils';
 import Header from './Header';
 

@@ -1,122 +1,109 @@
-import React from 'react';
+import React, { useCallback, useContext } from 'react';
 import './List.css';
 import TodoItem from '../Items/Item';
-import { nextId } from '../../utils';
+import { nextId, useQuery, AuthContext } from '../../utils';
+import client from '../../client';
 
-class TodosList extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      newTodo: '',
-      todos: [],
-    };
-  }
+function TodosList({ user }) {
+  const [todos, setTodos] = React.useState([]);
+  const [newTodo, setNewTodo] = React.useState('');
+  const { hasWritePermissions } = useContext(AuthContext);
 
-  handleInputChange = (event) => {
+  const handleInputChange = (event) => {
     const { value } = event.target;
 
-    this.setState({ newTodo: value });
+    setNewTodo(value);
   };
 
-  handleAddTodo = (event) => {
+  const handleAddTodo = (event) => {
     event.preventDefault();
-    const { todos, newTodo } = this.state;
 
-    this.setState({
-      todos: [...todos, { id: nextId(), text: newTodo, done: false }],
-      newTodo: '',
-    });
+    setTodos([...todos, { id: nextId(), text: newTodo, done: false }]);
+    setNewTodo('');
   };
 
-  handleRemoveTodo = (id) => {
-    const { todos } = this.state;
-
-    this.setState({
-      todos: todos.filter((todo) => {
+  const handleRemoveTodo = useCallback((id) => {
+    setTodos((todos) =>
+      todos.filter((todo) => {
         return todo.id !== id;
-      }),
-    });
-  };
+      })
+    );
+  }, []);
 
-  handleItemClick = (id, done) => {
-    const { todos } = this.state;
-
-    this.setState({
-      todos: todos.map((todo) => {
+  const handleItemClick = useCallback((id, done) => {
+    setTodos((todos) =>
+      todos.map((todo) => {
         if (todo.id === id) {
           return { ...todo, done };
         }
 
         return todo;
-      }),
-    });
+      })
+    );
+  }, []);
+
+  const handleClear = () => {
+    setTodos([]);
   };
 
-  handleClear = () => {
-    this.setState({
-      todos: [],
-    });
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.todosData !== prevProps.todosData) {
-      this.setState({ todos: this.props.todosData });
+  const { data: todosData, isLoading, error } = useQuery(
+    user && client.getUserTodos,
+    {
+      userId: user && user.id,
     }
-  }
+  );
 
-  render() {
-    const { newTodo, todos } = this.state;
+  React.useEffect(() => {
+    if (todosData) {
+      setTodos(todosData);
+    }
+  }, [todosData]);
 
-    const { user, isLoading, error } = this.props;
+  return (
+    <div className='todos-container'>
+      <h3>{user ? `${user.name} To-do list` : 'No user selected'}</h3>
 
-    return (
-      <div className='todos-container'>
-        <h3>{user ? `${user.name} To-do list` : 'No user selected'}</h3>
+      {isLoading && <div>Loading...</div>}
+      {error && <div>{error}</div>}
 
-        {isLoading && <div>Loading...</div>}
-        {error && <div>{error}</div>}
-
-        {user && !isLoading && !error && (
-          <>
+      {user && !isLoading && !error && (
+        <>
+          {hasWritePermissions() && (
             <form className='todos-form'>
               <input
                 className='flex-fullwidth'
                 type='text'
                 placeholder='new task'
                 value={newTodo}
-                onChange={this.handleInputChange}
+                onChange={handleInputChange}
               />
-              <button
-                type='submit'
-                onClick={this.handleAddTodo}
-                disabled={!newTodo}
-              >
+              <button type='submit' onClick={handleAddTodo} disabled={!newTodo}>
                 add
               </button>
             </form>
-            <div className='todos-list-container'>
-              <ul className='todos-list'>
-                {todos.map((todo) => {
-                  return (
-                    <TodoItem
-                      key={todo.id}
-                      {...todo}
-                      onClick={this.handleItemClick}
-                      onRemove={this.handleRemoveTodo}
-                    />
-                  );
-                })}
-              </ul>
+          )}
+          <div className='todos-list-container'>
+            <ul className='todos-list'>
+              {todos.map((todo) => {
+                return (
+                  <TodoItem
+                    key={todo.id}
+                    {...todo}
+                    onClick={handleItemClick}
+                    onRemove={handleRemoveTodo}
+                  />
+                );
+              })}
+            </ul>
 
-              {todos && todos.length > 0 && (
-                <button onClick={this.handleClear}>clear</button>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
+            {todos && todos.length > 0 && (
+              <button onClick={handleClear}>clear</button>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default TodosList;

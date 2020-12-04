@@ -13,7 +13,7 @@ export const useAuthorization = () => {
     setAuthorization({
       user: 'system',
       isLoggedIn: true,
-      permissions: ['READ'],
+      permissions: ['READ', 'WRITE'],
     });
   };
 
