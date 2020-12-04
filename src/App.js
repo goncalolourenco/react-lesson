@@ -3,7 +3,9 @@ import './App.css';
 
 class App extends React.Component {
   render() {
-    return <div className='App' />;
+    return <div className='App'>
+        my first react lesson
+       </div>;
   }
 }
 
