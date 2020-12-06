@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useQuery(fetchFunction, params = {}) {
   const [fetchState, setFetchState] = useState({
@@ -18,7 +18,7 @@ export function useQuery(fetchFunction, params = {}) {
           setFetchState({
             data: null,
             isLoading: false,
-            error: 'The request has failed',
+            error: "The request has failed",
           });
         }
       }

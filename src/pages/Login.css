@@ -1,0 +1,22 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  padding: 30px;
+  background-color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 4px;
+}
+
+.login-form > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.form-input {
+  border: 1px solid lightslategray;
+  border-radius: 4px;
+  padding: 10px;
+}

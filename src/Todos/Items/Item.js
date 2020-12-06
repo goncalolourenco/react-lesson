@@ -1,6 +1,6 @@
-import React, { memo, useContext } from 'react';
-import { AuthContext } from '../../utils';
-import './Item.css';
+import React, { memo, useContext } from "react";
+import { AuthContext } from "../../utils";
+import "./Item.css";
 
 function TodosItem({ id, text, done, onClick, onRemove }) {
   const { hasWritePermissions } = useContext(AuthContext);
@@ -17,10 +17,10 @@ function TodosItem({ id, text, done, onClick, onRemove }) {
   };
 
   return (
-    <li className='todo-item' onClick={handleItemClick}>
-      <span className={done ? 'done' : ''}>{text}</span>
+    <li className="todo-item" onClick={handleItemClick}>
+      <span className={done ? "done" : ""}>{text}</span>
       {hasWritePermissions() && (
-        <button className='delete' onClick={handleRemoveClick}>
+        <button className="delete" onClick={handleRemoveClick}>
           X
         </button>
       )}

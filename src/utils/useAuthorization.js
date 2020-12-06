@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const defaultState = {
   user: null,
@@ -11,9 +11,9 @@ export const useAuthorization = () => {
 
   const login = (username, password) => {
     setAuthorization({
-      user: 'system',
+      user: "system",
       isLoggedIn: true,
-      permissions: ['READ', 'WRITE'],
+      permissions: ["READ", "WRITE"],
     });
   };
 
@@ -23,7 +23,7 @@ export const useAuthorization = () => {
 
   const hasWritePermissions = () => {
     return (
-      authorization.permissions && authorization.permissions.includes('WRITE')
+      authorization.permissions && authorization.permissions.includes("WRITE")
     );
   };
 

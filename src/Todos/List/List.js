@@ -1,12 +1,12 @@
-import React, { useCallback, useContext } from 'react';
-import './List.css';
-import TodoItem from '../Items/Item';
-import { nextId, useQuery, AuthContext } from '../../utils';
-import client from '../../client';
+import React, { useCallback, useContext } from "react";
+import "./List.css";
+import TodoItem from "../Items/Item";
+import { nextId, useQuery, AuthContext } from "../../utils";
+import client from "../../client";
 
 function TodosList({ user }) {
   const [todos, setTodos] = React.useState([]);
-  const [newTodo, setNewTodo] = React.useState('');
+  const [newTodo, setNewTodo] = React.useState("");
   const { hasWritePermissions } = useContext(AuthContext);
 
   const handleInputChange = (event) => {
@@ -19,7 +19,7 @@ function TodosList({ user }) {
     event.preventDefault();
 
     setTodos([...todos, { id: nextId(), text: newTodo, done: false }]);
-    setNewTodo('');
+    setNewTodo("");
   };
 
   const handleRemoveTodo = useCallback((id) => {
@@ -60,8 +60,8 @@ function TodosList({ user }) {
   }, [todosData]);
 
   return (
-    <div className='todos-container'>
-      <h3>{user ? `${user.name} To-do list` : 'No user selected'}</h3>
+    <div className="todos-container">
+      <h3>{user ? `${user.name} To-do list` : "No user selected"}</h3>
 
       {isLoading && <div>Loading...</div>}
       {error && <div>{error}</div>}
@@ -69,21 +69,21 @@ function TodosList({ user }) {
       {user && !isLoading && !error && (
         <>
           {hasWritePermissions() && (
-            <form className='todos-form'>
+            <form className="todos-form">
               <input
-                className='flex-fullwidth'
-                type='text'
-                placeholder='new task'
+                className="flex-fullwidth"
+                type="text"
+                placeholder="new task"
                 value={newTodo}
                 onChange={handleInputChange}
               />
-              <button type='submit' onClick={handleAddTodo} disabled={!newTodo}>
+              <button type="submit" onClick={handleAddTodo} disabled={!newTodo}>
                 add
               </button>
             </form>
           )}
-          <div className='todos-list-container'>
-            <ul className='todos-list'>
+          <div className="todos-list-container">
+            <ul className="todos-list">
               {todos.map((todo) => {
                 return (
                   <TodoItem
