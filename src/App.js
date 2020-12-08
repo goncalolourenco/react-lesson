@@ -1,12 +1,8 @@
 import React from 'react';
 import './App.css';
 
-class App extends React.Component {
-  render() {
-    return <div className='App'>
-        my first react lesson
-       </div>;
-  }
+function App() {
+  return <div className='App'>my first react lesson</div>;
 }
 
 export default App;
