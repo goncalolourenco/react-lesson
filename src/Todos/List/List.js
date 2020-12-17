@@ -4,18 +4,21 @@ import { nextId } from '../../utils';
 import Item from '../Items/Item';
 import client from '../../client';
 
-function TodoList() {
+function TodoList({ user }) {
   const [newTodo, setNewTodo] = useState('');
   const [todos, setTodos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchTodos = async () => {
-      const res = await client.getUserTodos({ userId: 1 });
+      setIsLoading(true);
+      const res = await client.getUserTodos({ userId: user.id });
       setTodos(res);
+      setIsLoading(false);
     };
 
     fetchTodos();
-  }, []);
+  }, [user]);
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -52,6 +55,10 @@ function TodoList() {
       })
     );
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className='todos-container'>
