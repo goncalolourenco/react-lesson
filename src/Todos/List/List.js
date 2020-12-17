@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './List.css';
 import { nextId } from '../../utils';
 import Item from '../Items/Item';
+import client from '../../client';
 
 function TodoList() {
   const [newTodo, setNewTodo] = useState('');
   const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const res = await client.getUserTodos({ userId: 1 });
+      setTodos(res);
+    };
+
+    fetchTodos();
+  }, []);
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -23,6 +33,18 @@ function TodoList() {
     setTodos([]);
   };
 
+  const handleItemClick = (id, done) => {
+    setTodos((todos) =>
+      todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, done };
+        }
+
+        return todo;
+      })
+    );
+  };
+
   return (
     <div className='todos-container'>
       <form className='todos-form'>
@@ -38,9 +60,13 @@ function TodoList() {
           add
         </button>
       </form>
-      {todos.map((todo) => (
-        <Item key={todo.id} {...todo} />
-      ))}
+      <div className='todos-list-container'>
+        <ul className='todos-list'>
+          {todos.map((todo) => (
+            <Item key={todo.id} {...todo} onClick={handleItemClick} />
+          ))}
+        </ul>
+      </div>
       {todos && todos.length > 0 && <button onClick={handleClear}>clear</button>}
     </div>
   );
