@@ -45,6 +45,14 @@ function TodoList() {
     );
   };
 
+  const handleRemoveItem = (id) => {
+    setTodos((todos) =>
+      todos.filter((todo) => {
+        return todo.id !== id;
+      })
+    );
+  };
+
   return (
     <div className='todos-container'>
       <form className='todos-form'>
@@ -63,7 +71,7 @@ function TodoList() {
       <div className='todos-list-container'>
         <ul className='todos-list'>
           {todos.map((todo) => (
-            <Item key={todo.id} {...todo} onClick={handleItemClick} />
+            <Item key={todo.id} {...todo} onClick={handleItemClick} onRemove={handleRemoveItem} />
           ))}
         </ul>
       </div>
