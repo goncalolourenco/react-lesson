@@ -78,11 +78,18 @@ function TodoList({ user }) {
       <div className='todos-list-container'>
         <ul className='todos-list'>
           {todos.map((todo) => (
-            <Item key={todo.id} {...todo} onClick={handleItemClick} onRemove={handleRemoveItem} />
+            <Item
+              key={todo.id}
+              {...todo}
+              onClick={handleItemClick}
+              onRemove={handleRemoveItem}
+            />
           ))}
         </ul>
+        {todos && todos.length > 0 && (
+          <button onClick={handleClear}>clear</button>
+        )}
       </div>
-      {todos && todos.length > 0 && <button onClick={handleClear}>clear</button>}
     </div>
   );
 }
