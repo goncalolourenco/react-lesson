@@ -2,10 +2,27 @@ import React from "react";
 import { nextId } from "../../utils";
 import "./List.css";
 import TodoItem from "../Items/Item";
+import client from "../../client";
+
+
+const dummyUserId = 1;
 
 function TodosList() {
   const [newTodo, setNewTodo] = React.useState("");
   const [todos, setTodos] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchTodos = async ()=> {
+
+      setIsLoading(true);
+      const newTodos = await client.getUserTodos({userId: dummyUserId});
+      setTodos(newTodos);
+      setIsLoading(false);
+    }
+
+    fetchTodos(); 
+  }, [])
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -27,9 +44,36 @@ function TodosList() {
     setNewTodo("");
   };
 
+  const handleItemClick =(id) => {
+    setTodos((todos)=>
+      todos.map((todo)=> {
+        if(todo.id === id) {
+          return {...todo, done: !todo.done}
+        }
+        return todo;
+      })
+    )
+  }
+
+  const handleRemoveItem =(id)=> {
+   setTodos((todos)=> 
+      todos.filter((todo)=> {
+       return todo.id !== id
+      })
+   ) 
+  }
+
+  const handleClear =()=> {
+    setTodos([])
+  }
+
   React.useEffect(() => {
     console.log("todos list", todos);
   }, [todos]);
+
+  if(isLoading) {
+    return <div>is loading...</div>
+  }
 
   return (
     <div className='todos-container'>
@@ -47,13 +91,13 @@ function TodosList() {
           add
         </button>
       </form>
-
       <div className='todos-list-container'>
         <ul className='todos-list'>
           {todos.map((todo) => {
-            return <TodoItem key={todo.id} {...todo} />;
+            return <TodoItem key={todo.id} {...todo} onClick={handleItemClick} onRemove={handleRemoveItem}/>;
           })}
         </ul>
+        {todos.length > 0 && <button onClick={handleClear}>clear</button>}
       </div>
     </div>
   );
