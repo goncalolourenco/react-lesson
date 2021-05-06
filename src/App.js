@@ -1,11 +1,11 @@
-import React from "react";
-import "./App.css";
-import TodosList from "./Todos/List/List";
+import React from 'react';
+import './App.css';
+import TodosPage from './pages/TodosPage';
 
 function App() {
   return (
     <div className='App'>
-      <TodosList />
+      <TodosPage />
     </div>
   );
 }

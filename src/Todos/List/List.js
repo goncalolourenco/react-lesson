@@ -1,28 +1,24 @@
-import React from "react";
-import { nextId } from "../../utils";
-import "./List.css";
-import TodoItem from "../Items/Item";
-import client from "../../client";
+import React from 'react';
+import { nextId } from '../../utils';
+import './List.css';
+import TodoItem from '../Items/Item';
+import client from '../../client';
 
-
-const dummyUserId = 1;
-
-function TodosList() {
-  const [newTodo, setNewTodo] = React.useState("");
+function TodosList({ user }) {
+  const [newTodo, setNewTodo] = React.useState('');
   const [todos, setTodos] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-    const fetchTodos = async ()=> {
-
+    const fetchTodos = async () => {
       setIsLoading(true);
-      const newTodos = await client.getUserTodos({userId: dummyUserId});
+      const newTodos = await client.getUserTodos({ userId: user.id });
       setTodos(newTodos);
       setIsLoading(false);
-    }
+    };
 
-    fetchTodos(); 
-  }, [])
+    fetchTodos();
+  }, [user]);
 
   const handleInputChange = (event) => {
     const { value } = event.target;
@@ -41,38 +37,38 @@ function TodosList() {
         done: false,
       },
     ]);
-    setNewTodo("");
+    setNewTodo('');
   };
 
-  const handleItemClick =(id) => {
-    setTodos((todos)=>
-      todos.map((todo)=> {
-        if(todo.id === id) {
-          return {...todo, done: !todo.done}
+  const handleItemClick = (id) => {
+    setTodos((todos) =>
+      todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, done: !todo.done };
         }
         return todo;
       })
-    )
-  }
+    );
+  };
 
-  const handleRemoveItem =(id)=> {
-   setTodos((todos)=> 
-      todos.filter((todo)=> {
-       return todo.id !== id
+  const handleRemoveItem = (id) => {
+    setTodos((todos) =>
+      todos.filter((todo) => {
+        return todo.id !== id;
       })
-   ) 
-  }
+    );
+  };
 
-  const handleClear =()=> {
-    setTodos([])
-  }
+  const handleClear = () => {
+    setTodos([]);
+  };
 
   React.useEffect(() => {
-    console.log("todos list", todos);
+    console.log('todos list', todos);
   }, [todos]);
 
-  if(isLoading) {
-    return <div>is loading...</div>
+  if (isLoading) {
+    return <div>is loading...</div>;
   }
 
   return (
@@ -94,7 +90,14 @@ function TodosList() {
       <div className='todos-list-container'>
         <ul className='todos-list'>
           {todos.map((todo) => {
-            return <TodoItem key={todo.id} {...todo} onClick={handleItemClick} onRemove={handleRemoveItem}/>;
+            return (
+              <TodoItem
+                key={todo.id}
+                {...todo}
+                onClick={handleItemClick}
+                onRemove={handleRemoveItem}
+              />
+            );
           })}
         </ul>
         {todos.length > 0 && <button onClick={handleClear}>clear</button>}
