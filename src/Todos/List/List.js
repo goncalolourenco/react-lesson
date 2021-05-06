@@ -73,7 +73,7 @@ function TodosList({ user }) {
 
   return (
     <div className='todos-container'>
-      <h3>To-do list</h3>
+      <h3>{user.name} To-do list</h3>
 
       <form className='todos-form'>
         <input
